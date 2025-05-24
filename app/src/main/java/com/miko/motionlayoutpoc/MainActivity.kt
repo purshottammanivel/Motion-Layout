@@ -4,19 +4,16 @@ import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.exoplayer2.MediaItem
 import com.miko.motionlayoutpoc.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private val videoUris = mutableListOf<Uri>()
     private val videoAlbums = mutableListOf<String>()
+    private val displayNames = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,22 +52,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*override fun onResume() {
-        super.onResume()
-        if (videoAdapter == null) {
-            Log.d("QWERTY", "onResume: videoAdapter is null")
-        }
-        videoAdapter?.setOnVideoClickListener(object: VideoAdapter.OnVideoClickListener {
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onVideoClick(position: Int) {
-                val selectedVideoUri = videoUris[position]
-                Log.d("QWERTY", "onVideoClick: selectedVideoUri -> $selectedVideoUri")
-                playVideoAtPosition(position)
-                videoAdapter?.notifyDataSetChanged()
-            }
-        })
-    }*/
-
     private fun loadVideos() {
         val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
@@ -79,7 +61,8 @@ class MainActivity : AppCompatActivity() {
 
         val projection = arrayOf(
             MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.ALBUM // May not always be available; consider using BUCKET_DISPLAY_NAME instead
+            MediaStore.Video.Media.ALBUM, // May not always be available; consider using BUCKET_DISPLAY_NAME instead
+            MediaStore.Video.Media.DISPLAY_NAME // May not always be available; consider using BUCKET_DISPLAY_NAME instead
         )
         val sortOrder = "${MediaStore.Video.Media.DATE_ADDED} DESC"
 
@@ -91,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         cursor?.use {
             val idColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
             val albumColumn = it.getColumnIndex(MediaStore.Video.Media.ALBUM)
+            val bucketDisplayNameColumn = it.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)
 
             while (it.moveToNext()) {
                 val id = it.getLong(idColumn)
@@ -101,13 +85,18 @@ class MainActivity : AppCompatActivity() {
                     it.getString(col) ?: "Unknown Album"
                 } ?: "N/A"
                 videoAlbums.add(album)
+
+                val displayName = bucketDisplayNameColumn.let { col ->
+                    it.getString(col) ?: "Unknown Display Name"
+                } ?: "N/A"
+                this.displayNames.add(displayName)
             }
         }
 
         videoAdapter = VideoAdapter(this)
         binding.rvVideos.layoutManager = LinearLayoutManager(this)
         binding.rvVideos.adapter = videoAdapter
-        videoAdapter?.setAdapter(videoUris, videoAlbums)
+        videoAdapter?.setAdapter(videoUris, videoAlbums, displayNames)
 
         videoAdapter?.setOnVideoClickListener(object: VideoAdapter.OnVideoClickListener {
             @SuppressLint("NotifyDataSetChanged")

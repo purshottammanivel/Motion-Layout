@@ -16,11 +16,13 @@ class VideoAdapter(
 
     private var videoUris: List<Uri>? = null
     private var videoAlbums: List<String>? = null
+    private var displayNames: List<String>? = null
     private var onVideoClickListener: OnVideoClickListener? = null
 
-    fun setAdapter(videoUris: List<Uri>, videoAlbums: List<String>) {
+    fun setAdapter(videoUris: List<Uri>, videoAlbums: List<String>, displayNames: List<String>) {
         this.videoUris = videoUris
         this.videoAlbums = videoAlbums
+        this.displayNames = displayNames
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
@@ -42,8 +44,11 @@ class VideoAdapter(
         fun bind(position: Int) {
             val videoUri = videoUris?.get(position)
             val videoAlbum = videoAlbums?.get(position)
+            val displayName = displayNames?.get(position)
+
             binding.tvVideoName.text = videoUri.toString()
             binding.tvDuration.text = videoAlbum.toString()
+            binding.tvDisplayName.text = displayName.toString()
             binding.root.setOnClickListener {
                 Log.d("QWERTY", "bind: clicked position -> $position")
                 onVideoClickListener?.onVideoClick(position)
@@ -51,9 +56,7 @@ class VideoAdapter(
         }
     }
 
-    fun setOnVideoClickListener(
-        onVideoClickListener: OnVideoClickListener
-    ) {
+    fun setOnVideoClickListener(onVideoClickListener: OnVideoClickListener) {
         this.onVideoClickListener = onVideoClickListener
     }
 
