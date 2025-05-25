@@ -2,6 +2,7 @@ package com.miko.motionlayoutpoc
 
 import android.annotation.SuppressLint
 import android.content.ContentUris
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +39,8 @@ class VideoActivity : AppCompatActivity() {
         _binding = ActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // supportActionBar?.hide()
+
         val videoUriString = intent.getStringExtra("video_uri")
         val videoUri = videoUriString?.let { Uri.parse(it) }
 
@@ -49,7 +53,7 @@ class VideoActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         binding.exoPlayer.setOnTouchListener { view, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 view.performClick()
@@ -57,6 +61,19 @@ class VideoActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        enableImmersiveMode()
+        setupMotionLayoutListener()
+        setupExoPlayerPlaybackListeners()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun toggleShrinkExpand() {
@@ -86,11 +103,25 @@ class VideoActivity : AppCompatActivity() {
         exoPlayer?.play()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        setupMotionLayoutListener()
-        setupExoPlayerPlaybackListeners()
+    private fun enableImmersiveMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+            window.insetsController?.let {
+                it.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
+                it.systemBarsBehavior =
+                    android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    )
+        }
     }
 
     private fun setupMotionLayoutListener() {
@@ -147,6 +178,7 @@ class VideoActivity : AppCompatActivity() {
                         Player.STATE_READY -> {
                             Log.d("QWERTY", "STATE_READY reached, hiding progressbar")
                             // binding.progressbar.visibility = View.GONE
+                            window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                         }
 
                         Player.STATE_IDLE -> {

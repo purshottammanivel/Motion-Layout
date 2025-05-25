@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Sample video" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/tvDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvVideoName"
-        tools:text="8:16" />
+        tools:text="8:16" />-->
 
     <TextView
         android:id="@+id/tvDisplayName"
@@ -32,7 +32,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDuration"
+        app:layout_constraintTop_toBottomOf="@id/tvVideoName"
         tools:text="Song" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

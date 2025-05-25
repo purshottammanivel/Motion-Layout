@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.MotionLayoutPOC" parent="Base.Theme.MotionLayoutPOC" />
+
+    <style name="Theme.MotionLayoutPOC.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize as needed -->
+    </style>
 </resources>

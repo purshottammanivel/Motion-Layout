@@ -46,8 +46,8 @@ class VideoAdapter(
             val videoAlbum = videoAlbums?.get(position)
             val displayName = displayNames?.get(position)
 
-            binding.tvVideoName.text = videoUri.toString()
-            binding.tvDuration.text = videoAlbum.toString()
+            binding.tvVideoName.text = videoAlbum.toString()
+            // binding.tvDuration.text = videoAlbum.toString()
             binding.tvDisplayName.text = displayName.toString()
             binding.root.setOnClickListener {
                 Log.d("QWERTY", "bind: clicked position -> $position")
