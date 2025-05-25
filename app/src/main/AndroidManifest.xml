@@ -20,13 +20,21 @@
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />-->
-        <activity
+        <!--<activity
             android:name=".VideoActivity"
             android:screenOrientation="unspecified"
             android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:theme="@style/Theme.MotionLayoutPOC.NoActionBar"
-            android:exported="false"/>
+            android:exported="false"/>-->
+        <activity
+            android:name=".VideoActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:exported="false"
+            android:resizeableActivity="true"
+            android:screenOrientation="unspecified"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/Theme.MotionLayoutPOC.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
