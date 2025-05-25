@@ -2,6 +2,7 @@ package com.miko.motionlayoutpoc
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.miko.motionlayoutpoc.databinding.ItemRecommendedVideoBinding
@@ -53,6 +54,10 @@ class RecommendedVideoAdapter
 
             setVideoThumbnail(videoModels?.get(position)!!.thumbnail)
             setVideoDuration(formatDuration(video.duration))
+
+            binding.root.setOnClickListener {
+                onRecommendedVideoClickListener?.onRecommendedVideoClick(position)
+            }
         }
 
         private fun setVideoThumbnail(bitmap: Bitmap) {

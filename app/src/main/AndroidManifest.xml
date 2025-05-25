@@ -15,10 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MotionLayoutPOC"
         tools:targetApi="31">
-        <activity
+        <!--<activity
             android:name=".VideoActivity"
             android:screenOrientation="landscape"
-            android:exported="false" />
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />-->
+        <activity
+            android:name=".VideoActivity"
+            android:screenOrientation="unspecified"
+            android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
+            android:theme="@style/Theme.MotionLayoutPOC.NoActionBar"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

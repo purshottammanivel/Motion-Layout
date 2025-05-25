@@ -20,14 +20,14 @@
         app:show_previous_button="false"
         app:surface_type="texture_view" />
 
-    <ProgressBar
+    <!--<ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/exoPlayer"
         app:layout_constraintEnd_toEndOf="@id/exoPlayer"
         app:layout_constraintStart_toStartOf="@id/exoPlayer"
-        app:layout_constraintTop_toTopOf="@id/exoPlayer" />
+        app:layout_constraintTop_toTopOf="@id/exoPlayer" />-->
 
     <ImageView
         android:id="@+id/imgCloseVideo"
