@@ -1,8 +1,10 @@
 package com.miko.motionlayoutpoc
 
 import android.annotation.SuppressLint
+import android.app.PictureInPictureParams
 import android.content.ContentUris
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -10,8 +12,10 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Rational
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -74,6 +78,32 @@ class VideoActivity : AppCompatActivity() {
         super.onDestroy()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        if (!isInPictureInPictureMode) {
+            enterPipMode()
+        }
+    }
+
+    private fun enterPipMode() {
+        val aspectRatio = Rational(16, 9)
+        val pipBuilder = PictureInPictureParams.Builder()
+            .setAspectRatio(aspectRatio)
+            .build()
+        enterPictureInPictureMode(pipBuilder)
+    }
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration
+    ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        when (isInPictureInPictureMode) {
+            true -> { Log.d("QWERTY", "isInPIPMode-true") }
+            false -> { Log.d("QWERTY", "isInPIPMode-false") }
+        }
     }
 
     private fun toggleShrinkExpand() {
